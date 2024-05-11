@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Data from "./Data";
+import Task from "./Task";
 
 const API_URL = "http://localhost:3010/";
 
@@ -28,13 +29,14 @@ function Login() {
   };
 
   const handleOnClick = () => {
-    login({email, password})
-    if(showData) {
-      setPassword("")
-      setEmail("")
-    }
+    // login({email, password})
+    // if(showData) {
+    //   setPassword("")
+    //   setEmail("")
+    // }
 
-    setShowData(!showData)
+    // setShowData(!showData)
+    fetchTask();
   };
 
   const login = async ({
@@ -68,6 +70,20 @@ function Login() {
     }
   };
 
+  const fetchTask = async () => {
+    try {
+      const response = await fetch(`${API_URL}api/v1/tasks/testTasks`, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      });
+
+      const task = await response.json();
+      setTasks(task);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -83,7 +99,34 @@ function Login() {
         </section>
       )}
       <br />
-
+      <table className="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+        <thead className="thead-light">
+          <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Titulo</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Status</th>
+            <th scope="col">Última modificación</th>
+            <th scope="col">Creada en</th>
+            <th scope="col">Terminar en</th>
+          </tr>
+        </thead>
+        {tasks && (
+          <tbody>
+            {tasks.map((task) => (
+              <tr>
+                <td>{task._id}</td>
+                <td>{task.title}</td>
+                <td>{task.description}</td>
+                <td>{task.status}</td>
+                <td>{task.lastModified}</td>
+                <td>{task.createdAt}</td>
+                <td>{task.endIn}</td>
+              </tr>
+            ))}
+          </tbody>
+        )}
+      </table>
       <section className="form-control bg-dark-subtle">
         <h2 className="">Login</h2>
         <div className="form-floating mb-3">
