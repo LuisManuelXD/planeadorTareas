@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Data from "../Data";
 import Task from "../Task";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const API_URL = "http://localhost:3010/";
 
@@ -16,6 +16,7 @@ function Login() {
   const [showData, setShowData] = useState<boolean>(false);
   const [user, setUser] = useState<any>(null);
   const [tasks, setTasks] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const userInStorageString = window.localStorage.getItem("user");
@@ -37,16 +38,46 @@ function Login() {
     // }
 
     // setShowData(!showData)
-    fetchTask();
+    if (!email || !password) {
+      alert("Por favor, complete todos los campos.");
+      return;
+    }
+    login({ email, password });
+    // fetchTask();
   };
 
-  const login = async ({
-    email,
-    password,
-  }: {
-    email: string;
-    password: string;
-  }) => {
+  // const login = async ({
+  //   email,
+  //   password,
+  // }: {
+  //   email: string;
+  //   password: string;
+  // }) => {
+  //   try {
+  //     const response = await fetch(`${API_URL}api/v1/auth/login`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+
+  //     if (response.status === 200) {
+  //       const data = await response.json();
+  //       setUser(data);
+  //       window.localStorage.setItem("user", JSON.stringify(data));
+  //     } else {
+  //       alert("Usuario o contraseña incorrecta");
+  //     }
+
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  const login = async ({ email, password }) => {
     try {
       const response = await fetch(`${API_URL}api/v1/auth/login`, {
         method: "POST",
@@ -60,14 +91,12 @@ function Login() {
         const data = await response.json();
         setUser(data);
         window.localStorage.setItem("user", JSON.stringify(data));
+        navigate("/menuTareas");
       } else {
         alert("Usuario o contraseña incorrecta");
       }
-
-      const data = await response.json();
-      console.log(data);
     } catch (error) {
-      console.error(error);
+      console.error("Error de conexión al servidor:", error);
     }
   };
 
@@ -128,46 +157,55 @@ function Login() {
           </tbody>
         )}
       </table> */}
-      <div className="container text-center">
-        <img src="/src/assets/images/logos/logo-02.png" alt="Logo" className="m-3"/>
-      </div>
-      <section className="form-control bg-dark-subtle">
-        <h2 className="mt-2 mb-4">Login</h2>
-        <div className="form-floating mb-3">
-          <input
-            type="email"
-            className="form-control"
-            id="txtEmail"
-            name="txtEmail"
-            placeholder="name@example.com"
-            value={email}
-            onChange={handleInputChange(setEmail)}
+      <section className="container bg-dark-subtle p-4 mt-lg-5 mb-lg-5">
+        <div className="container text-center">
+          <img
+            src="/src/assets/images/logos/logo-02.png"
+            alt="Logo"
+            className="m-3"
           />
-          <label htmlFor="floatingInput">Correo electronico</label>
         </div>
-        <div className="form-floating">
-          <input
-            type="password"
-            className="form-control"
-            id="txtPassword"
-            name="txtPassword"
-            placeholder="Password"
-            value={password}
-            onChange={handleInputChange(setPassword)}
-          />
-          <label htmlFor="floatingPassword">Contraseña</label>
-        </div>
-        <button className="btn btn-primary btn-lg mt-3" onClick={handleOnClick}>
-          Ingresar
-        </button>
-        <div className="mt-3">
-          <p>
-            ¿No tienes una cuenta?{" "}
-            <Link to="/registrarUsuario" className="link-primary">
-              Registrate
-            </Link>
-          </p>
-        </div>
+        <section className="form-control bg-dark-subtle">
+          <h2 className="mt-2 mb-4">Login</h2>
+          <div className="form-floating mb-3">
+            <input
+              type="email"
+              className="form-control"
+              id="txtEmail"
+              name="txtEmail"
+              placeholder="name@example.com"
+              value={email}
+              onChange={handleInputChange(setEmail)}
+            />
+            <label htmlFor="floatingInput">Correo electronico</label>
+          </div>
+          <div className="form-floating">
+            <input
+              type="password"
+              className="form-control"
+              id="txtPassword"
+              name="txtPassword"
+              placeholder="Password"
+              value={password}
+              onChange={handleInputChange(setPassword)}
+            />
+            <label htmlFor="floatingPassword">Contraseña</label>
+          </div>
+          <button
+            className="btn btn-primary btn-lg mt-3"
+            onClick={handleOnClick}
+          >
+            Ingresar
+          </button>
+          <div className="mt-3">
+            <p>
+              ¿No tienes una cuenta?{" "}
+              <Link to="/registrarUsuario" className="link-primary">
+                Registrate
+              </Link>
+            </p>
+          </div>
+        </section>
       </section>
     </>
   );
