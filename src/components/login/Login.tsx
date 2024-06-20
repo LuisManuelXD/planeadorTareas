@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import Data from "./Data";
-import Task from "./Task";
+import Data from "../Data";
+import Task from "../Task";
+import { Link } from "react-router-dom";
 
 const API_URL = "http://localhost:3010/";
 
@@ -87,7 +88,7 @@ function Login() {
 
   return (
     <>
-      {user && (
+      {/* {user && (
         <section className="dataContainer">
           {
             <>
@@ -98,8 +99,8 @@ function Login() {
           }
         </section>
       )}
-      <br />
-      <table className="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
+      <br /> */}
+      {/* <table className="table table-borderless table-thead-bordered table-nowrap table-align-middle card-table">
         <thead className="thead-light">
           <tr>
             <th scope="col">Id</th>
@@ -126,9 +127,12 @@ function Login() {
             ))}
           </tbody>
         )}
-      </table>
+      </table> */}
+      <div className="container text-center">
+        <img src="/src/assets/images/logos/logo-02.png" alt="Logo" className="m-3"/>
+      </div>
       <section className="form-control bg-dark-subtle">
-        <h2 className="">Login</h2>
+        <h2 className="mt-2 mb-4">Login</h2>
         <div className="form-floating mb-3">
           <input
             type="email"
@@ -156,6 +160,14 @@ function Login() {
         <button className="btn btn-primary btn-lg mt-3" onClick={handleOnClick}>
           Ingresar
         </button>
+        <div className="mt-3">
+          <p>
+            ¿No tienes una cuenta?{" "}
+            <Link to="/registrarUsuario" className="link-primary">
+              Registrate
+            </Link>
+          </p>
+        </div>
       </section>
     </>
   );
